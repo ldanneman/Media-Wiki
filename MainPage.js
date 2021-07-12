@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,25 +11,7 @@ import {
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-
-const DATA = [
-  {
-    title: "Main dishes",
-    data: ["Pizza", "Burger", "Risotto"],
-  },
-  {
-    title: "Sides",
-    data: ["French Fries", "Onion Rings", "Fried Shrimps"],
-  },
-  {
-    title: "Drinks",
-    data: ["Water", "Coke", "Beer"],
-  },
-  {
-    title: "Desserts",
-    data: ["Cheese Cake", "Ice Cream"],
-  },
-];
+import axios from "axios";
 
 const Item = ({ title, navigation }) => (
   <View style={styles.item}>
@@ -45,18 +27,37 @@ const Item = ({ title, navigation }) => (
   </View>
 );
 
-const MainPage = ({ navigation }) => (
-  <SafeAreaView style={styles.container}>
-    <SectionList
-      sections={DATA}
-      keyExtractor={(item, index) => item + index}
-      renderItem={({ item }) => <Item title={item} navigation={navigation} />}
-      renderSectionHeader={({ section: { title } }) => (
-        <Text style={styles.header}>{title}</Text>
-      )}
-    />
-  </SafeAreaView>
-);
+const MainPage = ({ navigation }) => {
+  const [data, setData] = useState([]);
+  const DATA = [
+    {
+      title: "Main dishes",
+      data: data,
+    },
+  ];
+  useEffect(() => {
+    axios
+      .get(`localhost:5000/api/`)
+      .then(function (response) {
+        setData(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+  return (
+    <SafeAreaView style={styles.container}>
+      <SectionList
+        sections={DATA}
+        keyExtractor={(item, index) => item + index}
+        renderItem={({ item }) => <Item title={item} navigation={navigation} />}
+        renderSectionHeader={({ section: { title } }) => (
+          <Text style={styles.header}>{title}</Text>
+        )}
+      />
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
