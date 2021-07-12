@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -29,7 +29,17 @@ function HomeScreen({ navigation }) {
   );
 }
 
-function DetailsScreen() {
+function DetailsScreen({ navigation, route }) {
+  const { itemId, otherParam } = route.params;
+  return (
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text>Details Screen</Text>
+      <Text>{itemId}</Text>
+    </View>
+  );
+}
+
+function MediaScreen() {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>Details Screen</Text>
@@ -46,6 +56,7 @@ function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Details" component={DetailsScreen} />
         <Stack.Screen name="MainPage" component={MainPage} />
+        <Stack.Screen name="MediaScreen" component={MediaScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

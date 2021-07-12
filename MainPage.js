@@ -31,11 +31,12 @@ const DATA = [
   },
 ];
 
-const Item = ({ title }) => (
+const Item = ({ title, navigation }) => (
   <View style={styles.item}>
     <Button
       onPress={() => {
-        alert(`You tapped ${title}`);
+        //   alert(`You tapped ${title}`);
+        navigation.navigate("Details", { itemId: title });
       }}
       title={title}
     >
@@ -44,12 +45,12 @@ const Item = ({ title }) => (
   </View>
 );
 
-const MainPage = () => (
+const MainPage = ({ navigation }) => (
   <SafeAreaView style={styles.container}>
     <SectionList
       sections={DATA}
       keyExtractor={(item, index) => item + index}
-      renderItem={({ item }) => <Item title={item} />}
+      renderItem={({ item }) => <Item title={item} navigation={navigation} />}
       renderSectionHeader={({ section: { title } }) => (
         <Text style={styles.header}>{title}</Text>
       )}
