@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,6 +12,8 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import MainPage from "./MainPage";
+import axios from "axios";
+import { WebView } from "react-native-webview";
 
 function HomeScreen({ navigation }) {
   return (
@@ -30,19 +32,34 @@ function HomeScreen({ navigation }) {
 }
 
 function DetailsScreen({ navigation, route }) {
-  const { itemId, otherParam } = route.params;
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Details Screen</Text>
-      <Text>{itemId}</Text>
-    </View>
-  );
-}
+  const { itemId } = route.params;
+  const x = { item: itemId };
+  const [iframe, setIframe] = useState("");
+  console.log(itemId);
+  useEffect(() => {
+    axios
+      .post(`https://mediawiki1.herokuapp.com/api/iframe`, x)
+      .then(function (response) {
+        if (!response.data == "null") {
+          setIframe(response.data);
+        } else {
+          console.log("null");
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
 
-function MediaScreen() {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Details Screen</Text>
+      <WebView
+        originWhitelist={["*"]}
+        source={{
+          html: `${itemId}`,
+        }}
+      />
+      <Text>{itemId}</Text>
     </View>
   );
 }
@@ -56,7 +73,6 @@ function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Details" component={DetailsScreen} />
         <Stack.Screen name="MainPage" component={MainPage} />
-        <Stack.Screen name="MediaScreen" component={MediaScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

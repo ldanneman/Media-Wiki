@@ -8,6 +8,7 @@ import {
   SectionList,
   StatusBar,
   Button,
+  Linking,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -24,6 +25,15 @@ const Item = ({ title, navigation }) => (
     >
       <Text style={styles.title}>{title}</Text>
     </Button>
+    {/* <Button
+      onPress={() => {
+        //   alert(`You tapped ${title}`);
+        Linking.openURL(title);
+      }}
+      title={title}
+    >
+      <Text style={styles.title}>{title}</Text>
+    </Button> */}
   </View>
 );
 
@@ -31,13 +41,13 @@ const MainPage = ({ navigation }) => {
   const [data, setData] = useState([]);
   const DATA = [
     {
-      title: "Main dishes",
+      title: "Top Mix",
       data: data,
     },
   ];
   useEffect(() => {
     axios
-      .get(`localhost:5000/api/`)
+      .get(`https://mediawiki1.herokuapp.com/api/`)
       .then(function (response) {
         setData(response.data);
       })
@@ -66,7 +76,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   item: {
-    backgroundColor: "#f9c2ff",
+    backgroundColor: "#00BDFE",
     padding: 20,
     marginVertical: 8,
   },
